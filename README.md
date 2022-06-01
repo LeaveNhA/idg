@@ -17,7 +17,7 @@ First install `dg`, so that you have `dg` package in your python environment. Th
 
 ```
 git clone https://github.com/LeaveNhA/idg
-cd ipurescript
+cd idg
 jupyter kernelspec install idg
 ```
 
