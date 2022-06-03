@@ -16,6 +16,7 @@ BytesIO = import '/io/BytesIO'
 Figure = import '/matplotlib/figure/Figure'
 urllib = import '/urllib'
 base64 = import '/base64'
+np = import '/numpy'
 
 IdgKernel = subclass Kernel where
   #: Ütopik bir çekirdek girişimi.
@@ -102,14 +103,14 @@ IdgKernel = subclass Kernel where
       'user_expressions', dict!
 
   do_complete = code_ cursor_position_ ~>
-    if cursor_position_ is None =>
-      cursor_position_ = len code_
-    [line_, offset_] = tokenutil.line_at_cursor code_ cursor_position_
-    line_cursor_ = cursor_position_ - offset_
-    completion_results_ = @__complete_word line_
+    code__ = code_ !! slice 0 (cursor_position_ + 1)
+    splitted_code_ = code__.split!
+    word_ = last splitted_code_
+    completion_results_ = @__complete_word word_
     dict'
       'status', ('ok')
       'matches', (completion_results_)
-      'cursor_start', (cursor_position_ - (len line_))
+      'cursor_start', (cursor_position_ - (len word_))
       'cursor_end', (cursor_position_)
       'metadata', (dict!)
+    # (word_, line_, completion_results_, cursor_position_, offset_)
