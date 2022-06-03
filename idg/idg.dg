@@ -37,17 +37,6 @@ IdgKernel = subclass Kernel where
   error_flag = False
   e_ = None
 
-  __complete_word = word ~>
-    path, dot, word = word.rpartition '.'
-    completion_ns = (sys.modules !! '__main__') |>.__dict__
-    sorted $ map (path + dot +) $
-      # Hide private attributes unless an underscore was typed.
-      filter (w -> w.startswith word and (word or not (w.startswith '_'))) $ if
-        not path  => set Compiler.prefix | set BUILTINS | set completion_ns
-        otherwise => except
-          err => dir $ eval path completion_ns
-          err `isinstance` Exception => []
-
   # Init?
   __init__ = *: args **: kwargs ~>
     @@__init__ **: kwargs
@@ -101,6 +90,17 @@ IdgKernel = subclass Kernel where
       'execution_count', @_execution_count
       'payload', list!
       'user_expressions', dict!
+
+  __complete_word = word ~>
+    path, dot, word = word.rpartition '.'
+    completion_ns = (globals!)
+    sorted $ map (path + dot +) $
+      # Hide private attributes unless an underscore was typed.
+      filter (w -> w.startswith word and (word or not (w.startswith '_'))) $ if
+        not path  => set Compiler.prefix | set BUILTINS | set completion_ns
+        otherwise => except
+          err => dir $ eval path completion_ns
+          err `isinstance` Exception => []
 
   do_complete = code_ cursor_position_ ~>
     code__ = code_ !! slice 0 (cursor_position_ + 1)
