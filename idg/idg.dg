@@ -40,12 +40,12 @@ IdgKernel = subclass Kernel where
     path, dot, word = word.rpartition '.'
     completion_ns = (sys.modules !! '__main__') |>.__dict__
     sorted $ map (path + dot +) $
-    # Hide private attributes unless an underscore was typed.
-    filter (w -> w.startswith word and (word or not (w.startswith '_'))) $ if
-      not path  => set Compiler.prefix | set BUILTINS | set completion_ns
-      otherwise => except
-        err => dir $ eval path completion_ns
-        err `isinstance` Exception => []
+      # Hide private attributes unless an underscore was typed.
+      filter (w -> w.startswith word and (word or not (w.startswith '_'))) $ if
+        not path  => set Compiler.prefix | set BUILTINS | set completion_ns
+        otherwise => except
+          err => dir $ eval path completion_ns
+          err `isinstance` Exception => []
 
   # Init?
   __init__ = *: args **: kwargs ~>
