@@ -70,7 +70,7 @@ IdgKernel = subclass Kernel where
     imgdata_.seek 0
     urllib.parse.quote (base64.b64encode (imgdata_.getvalue!))
 
-  do_execute = code silent **: args ~>
+  do_execute = code silent *: args **:kwargs ~>
     if not silent =>
       except
         err_ => with @captured_output_ = capture.capture_output! =>
@@ -102,13 +102,14 @@ IdgKernel = subclass Kernel where
       'user_expressions', dict!
 
   do_complete = code_ cursor_position_ ~>
-    if cursor_position_ is None => cursor_position_ = len code_
+    if cursor_position_ is None =>
+      cursor_position_ = len code_
     [line_, offset_] = tokenutil.line_at_cursor code_ cursor_position_
     line_cursor_ = cursor_position_ - offset_
     completion_results_ = @__complete_word line_
     dict'
-      'status', 'ok'
-      'matches', completion_results_
+      'status', ('ok')
+      'matches', (completion_results_)
       'cursor_start', (cursor_position_ - (len line_))
-      'cursor_end', cursor_position_
-      'metadata': dict!
+      'cursor_end', (cursor_position_)
+      'metadata', (dict!)
