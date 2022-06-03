@@ -79,12 +79,13 @@ IdgKernel = subclass Kernel where
           if @evalresult_ :: Figure =>
             [width_, height_] = @evalresult_.get_size_inches!
             dpi_ = @evalresult_.dpi
-            @send_response @iopub_socket 'display_data' dict'
-              'source', 'kernel'
-              'data', {('image/png', (@to_png @evalresult_))}
-              'metadata', dict'
-                'image/png', {('width', width_ * dpi_),
-                  ('height', height_ * dpi_)}
+            @send_response @iopub_socket 'display_data'
+              dict'
+                'source', 'kernel'
+                'data', dict' ('image/png', (@to_png @evalresult_))
+                'metadata', {('image/png',
+                  {('width', width_ * dpi_),
+                   ('height', height_ * dpi_)})}
     dict'
       'status', 'ok'
       'execution_count', @_execution_count
