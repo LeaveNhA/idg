@@ -29,8 +29,8 @@ IdgKernel = subclass Kernel where
     'name', 'Dg'
     'mimetype', 'text/dg'
     'file_extension', '.dg'
-    'codemirror_mode', {('name', 'python')}
-    'pygments_lexer', 'ipython3'
+    'codemirror_mode', {('name', 'dg')}
+    'pygments_lexer', 'dg'
   language_version = '1.1.0' #??
   banner = "Dg will rule the Doges."
   _execution_count = 0 # Should I really do that??
